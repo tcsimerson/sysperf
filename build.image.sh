@@ -10,7 +10,7 @@ then
 	exit 1
 fi
 case $1 in
-	'sysperf-base'|'sar-perf'|'flexperf')
+	'sysperf-base'|'sysperf'|'sar-perf'|'flexperf')
 		IMAGE=$1
 		;;
 	*)
@@ -28,7 +28,7 @@ done
 
 echo
 echo "Building new image, version $VERSION"
-VERSION=`cat ../VERSION.$IMAGE`
+VERSION=`cat VERSION.$IMAGE`
 cd $IMAGE
 podman build -t $IMAGE:latest -t $IMAGE:$VERSION .
 

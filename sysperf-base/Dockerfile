@@ -5,5 +5,5 @@ FROM alpine:3.16.0
 RUN apk add python3 py3-pip
 
 # Install additional Python modules via pip
-RUN pip install openpyxl flask
+RUN pip install openpyxl flask requests
 

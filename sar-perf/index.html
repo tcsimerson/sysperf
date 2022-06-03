@@ -1,0 +1,73 @@
+<html>
+ <head>
+  <title>SAR Performance Analyzer</title>
+ </head>
+ <body>
+  <a href="http://{{nodename}}:8080/sar-perf/testapi">Testing sysperf inter container comms</a>
+  <h2>SAR Performance Analyzer</h2>
+  <p>This page is used to generate an analysis spreadsheet for the supplied SAR data files.  All of the graphs will be generated similar to the FCP spreadsheet but will not do the Flex consolidation analysis. This feature is designed to take the binary file (sa??) from any Veritas appliances (NetBackup, Flex or Access) or any Linux system (tested with RHEL and CentOS so far).
+  </p>
+  <p>Since we are doing performance analysis, I/O and swap performance are important to this analysis. Below, you are asked for a NIC list for both ingest/receive and output/transmit along with a swap device (this is optional). Both of these fields will accept multiple entries using a comma between the entries.  A good use case would be with bonded interfaces.  Tracking on the slave interfaces to ensure load balancing is actually occurring.
+  </p>
+  <h2>Data collection instructions and bundle file format</h2>
+  <p>This document (<a href="Sar-Perf_Instructions_and_Use-V1.0.pdf" target="_blank">Sar-Perf Instructions and Use.pdf</a>) provides full details about activating sare performance data collection, retrieving the data from the servers and how to analyze the generated spreadsheet.  Please note that sar performance data is already being collected on all Veritas appliances.
+  </p>
+  <p>The bundle file is expected to be either zip or tar.gz format.  The content files are expected to be saved with no directory structure preserved.  For example, running a "unzip -l" command on a zip file should return output that looks like this:
+<pre>
+Archive:  plbkvna116.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+   782400  2020-04-02 23:50   sa02
+  1963616  2020-04-03 23:50   sa03
+  1963616  2020-04-04 23:50   sa04
+  1963616  2020-04-05 23:50   sa05
+  1963616  2020-04-06 23:50   sa06
+  1963616  2020-04-07 23:50   sa07
+  1963616  2020-04-08 23:50   sa08
+  1963616  2020-04-09 23:50   sa09
+  1963616  2020-04-10 23:50   sa10
+  1963616  2020-04-11 23:50   sa11
+  1963616  2020-04-12 23:50   sa12
+  1963616  2020-04-13 23:50   sa13
+  1963616  2020-04-14 23:50   sa14
+  1963616  2020-04-15 23:50   sa15
+  1963616  2020-04-16 23:50   sa16
+  1963616  2020-04-17 23:50   sa17
+  1963616  2020-04-18 23:50   sa18
+  1963616  2020-04-19 23:50   sa19
+  1963616  2020-04-20 23:50   sa20
+  1963616  2020-04-21 23:50   sa21
+  1963616  2020-04-22 23:50   sa22
+   982112  2020-04-23 11:50   sa23
+---------                     -------
+ 41036832                     22 files
+</pre>
+  </p>
+  <h2>How to use this page and limitations</h2>
+  <p>This is a two step process:  first upload the files and then process them.  The uploaded files are not saved but deleted after processing.  This is for security reasons.  After uploading the files, you'll be presented with prompts to enter the network in NIC(s), network out NIC(s) and the swap block device(s).  Once the prompts are filled in, click on the processing button. Once processing is complete, links will be created for downloading the generated Excel spreadsheet for each supplied zip file. There will also be a link to view a log file with details of the processing in case the Excel file didn't work correctly.
+  </p>
+  <p>If you need access to older data, simply reupload and reprocess the original files.
+  </p>
+  <p>All fields below are required to be filled in.
+   <ul>
+     <li>The customer name field will not accept any spaces.  Use underscores or dashes instead.</li>
+     <li>After selecting files with the Browse button, you can hover over the Browse button to see list of files.</li>
+     <li>The following file size limits are being enforced:</li>
+       <ul>
+         <li>Individual maximum file size = 1024 MB</li>
+         <li>Maximum number of files = 50</li>
+       </ul>
+     <li>Each time you click on the Browse button, the previous file selections will be overwritten, i.e., it is not additive.</li>
+     <li>It takes approximately 10 - 20 seconds per uploaded zip file to process. Please be patient during the processing files phase.</li>
+   </ul>
+  </p>
+  <h3 id="upload-file">Upload files</h3>
+  <form method='post' action='http://{{nodename}}:8080/sar-perf/upload' enctype='multipart/form-data'>
+   Your e-mail: <input type="email" name="email" required placeholder="E-mail Address"><br>
+   Customer name: <input name="customer" required placeholder="Customer name here" pattern="[a-zA-Z0-9_\-]*" title="No spaces allowed in customer name"><br>
+   Collected SA file: <input type="file" name="file[]" multiple="multiple" required accept=".zip,.tar.gz"> <br>
+   <input type='submit' value='Upload File'>
+  </form>
+  <p>Version {{version}}</p>
+ </body>
+</html>
