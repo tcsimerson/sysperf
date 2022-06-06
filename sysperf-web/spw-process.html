@@ -1,0 +1,95 @@
+<html>
+        <head>
+                <title>Sar-Perf - Process</title>
+        </head>
+
+        <body>
+        <h2>Processing files completed</h2>
+<?php
+# Defining some global variables
+$rootdir="/sar-perf/www/htdocs/uploads";
+$uploads="uploads";
+$config_file="/sar-perf/etc/appliance.json";
+
+# Build out the target directory structure
+# because of the @ in the e-mail, converting to md5 hash
+$email=$_POST['email'];
+$emaildir=sprintf("%s/%s",$rootdir,$email);
+$customer=$_POST['customer'];
+$targetdir=sprintf("%s/%s",$emaildir,$customer);
+$nics_in=$_POST['nici'];
+$nics_out=$_POST['nico'];
+$swap_devs=$_POST['swapdev'];
+
+# looping through all the zip files
+if (is_dir($targetdir)) {
+        if ($dh = opendir($targetdir)) {
+                chdir($targetdir);
+                while (( $file=readdir($dh)) !== false) {
+                        # Skip the . and .. file references
+                        if ( $file == "." || $file == ".." ) { continue; }
+
+                        # skip any files that dont end with .zip or .tar.gz
+                        if ( ! preg_match('/.zip$/',$file) && ! preg_match('/.tar.gz$/',$file) ) { continue; }
+
+                        # File processed, now run sar-perf.sh
+                        if ( empty($swap_devs) ) {
+                                system("/sar-perf/bin/sar-perf.pl -c $config_file -f $file -i $nics_in -o $nics_out 2>/dev/null");
+                        } else {
+                                system("/sar-perf/bin/sar-perf.pl -c $config_file -f $file -i $nics_in -o $nics_out -s $swap_devs 2>/dev/null");
+                        }
+                }
+                closedir($dh);
+        }
+}
+
+# Reopening the target directory to create the links to the
+# Excel and log files.  While looping, clean up directories
+if ( is_dir($targetdir)) {
+        if ( $dh = opendir($targetdir) ) {
+                chdir($targetdir);
+                while (( $file=readdir($dh)) !== false) {
+                        # Skip the . and .. file references
+                        if ( $file == "." || $file == ".." ) { continue; }
+
+                        # Skipping if a directory
+                        if ( is_dir($file) ) { continue; }
+
+                        # cleaning up the zip files
+                        if ( preg_match('/.zip$/',$file) ) {
+                                unlink($file);
+                                continue;
+                        }
+                        # cleaning up the tar.gz
+                        if ( preg_match('/.tar.gz$/',$file) ) {
+                                unlink($file);
+                                continue;
+                        }
+
+                        # Concatenante the local log file to the
+                        # main log file
+                        if ( preg_match('/.log$/',$file) ) {
+                                system("cat $file >> /sar-perf/logs/sar-perf-web.log");
+                        }
+
+                        # Need to move the file up one directory to
+                        # the emaildir
+                        $oldfile=$targetdir."/".$file;
+                        $newfile=$rootdir."/".$email."/".$file;
+                        rename($oldfile,$newfile);
+
+                        # Printing out the link to the various files
+                        printf("<a href=\"%s\">%s</a><br>",$uploads."/".$email."/".$file,$file);
+                }
+                closedir($dh);
+        }
+}
+# Done processing all data and cleaned up.  Remove
+# the target (customer name) directory
+rmdir($targetdir);
+?>
+
+        <p><a href="index.php">Return to home</a></p>
+	<p>Version {{version}}</p>
+        </body>
+</html>

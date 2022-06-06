@@ -1,0 +1,40 @@
+<html>
+        <head>
+                <title>FCP - Process</title>
+        </head>
+
+        <body>
+<?php
+# Defining some global variables
+$rootdir="/flexperf/www/html/uploads";
+$uploads="uploads";
+
+# Build out the target directory structure
+# because of the @ in the e-mail, converting to md5 hash
+$email=$_GET['email'];
+$emaildir=sprintf("%s/%s",$rootdir,$email);
+$customer=$_GET['customer'];
+$targetdir=sprintf("%s/%s",$emaildir,$customer);
+
+# make call to flexperf.web
+exec("/usr/bin/perl /flexperf/bin/flexperf.web $targetdir");
+
+# Create link to xlsx file
+$excelfile=$uploads."/".$email."/".$customer.".xlsx";
+printf("<a href=\"%s\">%s.xlsx</a>",$excelfile,$customer);
+
+# Clean up all of the zip files and the directory.
+# Leaving the spreadsheet to be cleaned up later via cron job
+$files=scandir($targetdir);
+foreach($files as $file) {
+        if ( $file == "." || $file == ".." ) { continue; }
+        unlink($targetdir."/".$file);
+}
+rmdir($targetdir);
+?>
+
+        <p><a href="index.php">Return to home</a></p>
+	<p>Version {{version}}</p>
+        </body>
+</html>
+

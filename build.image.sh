@@ -10,7 +10,7 @@ then
 	exit 1
 fi
 case $1 in
-	'sysperf-base'|'sysperf'|'sar-perf'|'flexperf')
+	'sysperf-base'|'sysperf'|'sysperf-web')
 		IMAGE=$1
 		;;
 	*)

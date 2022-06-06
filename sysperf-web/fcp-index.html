@@ -1,0 +1,37 @@
+<html>
+ <head>
+  <title>Flex Consolidation Processor and Performance Analyzer</title>
+ </head>
+ <body>
+  <h2>Flex Consolidation Processor</h2>
+  <p>Please see the <a href="https://confluence.community.veritas.com/display/AMSSE/Consolidating+onto+Flex" target="_blank">Flex Consolidation Performance Analysis whitepaper</a> for full details on how to use this web page for Flex consolidation. The uploaded files are expected to contain the binary sa files and a text file that contains additional appliance information.
+  </p>
+  <h2>How to use this page and limitations</h2>
+  <p>This is a two step process:  first upload the files and then process them.  The uploaded files are not saved but deleted after processing.  This is for security reasons.  After uploading the files, you'll be presented with a button to process the uploaded files.  Processing will start immediately but there will be no page updates until processing is completed.  A link will be created for downloading the generated Excel spreadsheet upon processing completion.
+  </p>
+  <p>If you need access to older data, simply reupload and reprocess the original files.
+  </p>
+  <p>All fields below are required to be filled in.
+   <ul>
+     <li>This will support appliance code level 2.6.1.2 and later.</li>
+     <li>The customer name field will not accept any spaces.  Use underscores or dashes instead.</li>
+     <li>After selecting files with the Browse button, you can hover over the Browse button to see list of files.</li>
+     <li>The following file size limits are being enforced:</li>
+       <ul>
+         <li>Individual maximum file size = 1024 MB</li>
+         <li>Maximum number of files = 50</li>
+       </ul>
+     <li>Each time you click on the Browse button, the previous file selections will be overwritten, i.e., it is not additive.</li>
+     <li>It takes approximately 10 seconds per uploaded zip file to process. Please be patient during the processing files phase.</li>
+   </ul>
+  </p>
+  <h3 id="upload-file">Upload files</h3>
+  <form method='post' action='http://{{nodename}}:8080/flexperf/upload' enctype='multipart/form-data'>
+   Your e-mail: <input type="email" name="email" required placeholder="E-mail Address"><br>
+   Customer name: <input name="customer" required placeholder="Customer name here" pattern="[a-zA-Z0-9_\-]*" title="No spaces allowed in customer name"><br>
+   Collected SA files: <input type="file" name="file[]" multiple="multiple" required accept=".zip"> <br>
+   <input type='submit' value='Upload Files'>
+  </form>
+  <p>Version {{version}}</p>
+ </body>
+</html>
