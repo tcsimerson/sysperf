@@ -5,6 +5,7 @@
 
         <body>
         <h2>Files uploaded, provide processing inputs</h2>
+<!--
 <?php
 # Defining some global variables
 $rootdir="/sar-perf/www/htdocs/uploads";
@@ -40,17 +41,16 @@ for($i=0;$i<$countfiles;$i++){
 # e-mail and customer name information
 
 ?>
-        <form method='post' action='process.php'>
-<?php
-printf("<input type='hidden' name='email' value='%s'>",$email);
-printf("<input type='hidden' name='customer' value='%s'>",$customer);
-?>
+-->
+        <form method='post' action='http://{{nodename}}:8080/sar-perf/process'>
+	<input type='hidden' name='email' value={{e-mail}}>
+	<input type='hidden' name='customer' value={{customer}}>
         Network in/recieve NIC(s): <input name='nici' placeholder='NIC1[,NIC2,...]'><br>
         Network out/transmit NIC(s): <input name='nico' placeholder='NIC1[,NIC2,...]'><br>
         Swap device(s): <input name='swapdev' placeholder='DEV1[,DEV2,...]'><br>
         <input type='submit' value='Process files'>
         </form>
-        <p><a href="index.php">Return to home</a></p>
+        <p><a href="http://{{nodename}}:8080/sar-perf">Return to home</a></p>
 	<p>Version {{version}}</p>
         </body>
 </html>

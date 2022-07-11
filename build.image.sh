@@ -6,7 +6,7 @@
 if [ $# -ne 1 ]
 then
 	echo "You must provide a single argument that specifies the image to build."
-	echo "Valid images are sysperf-base, sar-perf, or flexperf."
+	echo "Valid images are sysperf-base, sysperf, or sysperf-web."
 	exit 1
 fi
 case $1 in

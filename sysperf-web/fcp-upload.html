@@ -1,46 +1,41 @@
 <html>
-        <head>
-                <title>FCP - Upload</title>
-        </head>
+  <head>
+    <title>FCP - Upload</title>
+  </head>
 
-        <body>
-<?php
-# Defining some global variables
-$rootdir="/flexperf/www/html/uploads";
-$uploads="uploads";
-
-# Count total files
-$countfiles = count($_FILES['file']['name']);
-
-# Build out the target directory structure
-# because of the @ in the e-mail, converting to md5 hash
-printf("<br>Creating directory structure\n");
-$email=$_POST['email'];
-$email=strtolower($email);
-$emaildir=sprintf("%s/%s",$rootdir,$email);
-if ( ! file_exists($emaildir) ) { mkdir($emaildir); }
-$customer=$_POST['customer'];
-$targetdir=sprintf("%s/%s",$emaildir,$customer);
-if ( ! file_exists($targetdir) ) { mkdir($targetdir); }
-
-# Looping all files
-for($i=0;$i<$countfiles;$i++){
-        $filename = $_FILES['file']['name'][$i];
-
-        # Upload file
-        move_uploaded_file($_FILES['file']['tmp_name'][$i],$targetdir.'/'.$filename);
-
-        printf("<br>File %s successfully uploaded\n",$filename);
-}
-
-# Create the Process Files button passing the
-# e-mail and customer name information
-printf("<form method='post' action='process.php?email=%s&customer=%s'>",$email,$customer);
-printf("<input type='submit' value='Process files'>");
-printf("</form>");
-
-?>
-        <p><a href="index.php">Return to home</a></p>
-	<p>Version {{version}}</p>
-        </body>
+  <body>
+{#
+Add sections here for each API processing step to show the results and status.
+unzip/gunzi-tar files
+check data file count
+check/convert files to proper sysstat format
+order files in ascending order
+normalize the time interval
+build time_template dictionary
+    <p>Form data table</p>
+    <table border = 1>
+      {% for key,value in result.items() %}
+        <tr>
+          <th> {{key}} </th>
+	  <td> {{value}} </td>
+	</tr>
+      {% endfor %}
+    </table>
+    <p>Filename table</p>
+    <table border = 1>
+      {% for value in filenames %}
+        <tr>
+	  <th> filename </th>
+	  <td> {{value}} </td>
+	</tr>
+      {% endfor %}
+    </table>
+#}
+    <p>Button to process data</p>
+    <form method='post' action='http://{{nodename}}:8080/flexperf/process'>
+      <input type='submit' value='Process files'>
+    </form>
+    <p><a href="http://{{nodename}}:8080/flexperf">Return to home</a></p>
+    <p>Version {{version}}</p>
+  </body>
 </html>

@@ -29,7 +29,7 @@
   <form method='post' action='http://{{nodename}}:8080/flexperf/upload' enctype='multipart/form-data'>
    Your e-mail: <input type="email" name="email" required placeholder="E-mail Address"><br>
    Customer name: <input name="customer" required placeholder="Customer name here" pattern="[a-zA-Z0-9_\-]*" title="No spaces allowed in customer name"><br>
-   Collected SA files: <input type="file" name="file[]" multiple="multiple" required accept=".zip"> <br>
+   Collected SA files: <input type="file" name="file" multiple="multiple" required accept=".zip"> <br>
    <input type='submit' value='Upload Files'>
   </form>
   <p>Version {{version}}</p>

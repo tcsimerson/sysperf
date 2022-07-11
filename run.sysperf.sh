@@ -5,6 +5,14 @@
 WORKING_DIR="/data01/sysperf"
 NODE_NAME=`hostname`
 
+# Checking to see if need to run in debug mode
+if [ "$1" = "debug" ]
+then
+	DEBUG=""
+else
+	DEBUG="-d"
+fi
+
 # Creating the private network
 echo "Adding sysperf-net private container network"
 podman network create sysperf-net
@@ -14,9 +22,10 @@ VERSION=`cat VERSION.sysperf`
 echo "Stopping sysperf container"
 podman container stop sysperf
 echo "Starting sysperf container"
-podman run --rm -d \
+podman run --rm $DEBUG \
 	--net sysperf-net \
         --name sysperf \
+        -v $WORKING_DIR/sysperf-data:/sysperf/data \
         sysperf:$VERSION
 
 # Starting the sysperf-web container
@@ -25,7 +34,7 @@ VERSION=`cat VERSION.sysperf-web`
 echo "Stopping sysperf-web container"
 podman container stop sysperf-web
 echo "Starting sysperf-web container"
-podman run --rm -d \
+podman run --rm $DEBUG \
 	-p 8080:5001/tcp \
         --net sysperf-net \
         --name sysperf-web \
